@@ -1,0 +1,45 @@
+#include "p16F628a.inc"
+ __CONFIG _FOSC_INTOSCCLK & _WDTE_OFF & _PWRTE_OFF & _MCLRE_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF & _CP_OFF      
+RES_VECT  CODE    0x0000
+GOTO START
+MAIN_PROG CODE
+
+num1 equ 0x30
+num2 equ 0x31
+
+START:
+    MOVLW 0x07
+    MOVWF CMCON
+    BCF STATUS, RP1
+    BSF STATUS, RP0
+    MOVLW B'11111111'
+    MOVWF TRISA
+    MOVLW B'00000000'
+    MOVWF TRISB
+    BCF STATUS, RP0
+    
+    GOTO INICIO
+    
+    INICIO:
+	MOVFW PORTA
+	MOVWF num1
+	MOVWF num2
+	BCF num1, 7
+	BCF num1, 6
+	BCF num1, 5
+	BCF num1, 4
+	BCF num2, 3
+	BCF num2, 2
+	BCF num2, 1
+	BCF num2, 0
+	SWAPF num2
+	MOVLW D'0'
+
+	MULTIPLICACION:
+	    ADDWF num1, 0
+	    DECFSZ num2
+
+	    GOTO MULTIPLICACION
+	    MOVWF PORTB
+
+END 
